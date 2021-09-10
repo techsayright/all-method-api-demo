@@ -4,6 +4,7 @@ import './css/Form.css'
 export default function Login({setShowLogin, setShowHome}) {
 
     const [data ,setData] = useState()
+    const [isUsernameExist, setIsUsernameExist]= useState(false)
 
     /******************* 
     @Purpose : get method api call
@@ -19,6 +20,33 @@ export default function Login({setShowLogin, setShowHome}) {
     useEffect(()=>{
         fetchData()
     }, [])
+
+    /******************* 
+    @Purpose : username Exist or not Checker
+    @Parameter : {}
+    @Author : DARSH
+    ******************/
+    const userExist = e=>{
+        
+        let isExist =false
+        data.forEach((value)=>{
+            if(e.target.value===value.username){
+                isExist=true
+            }
+            if(isExist){
+                setIsUsernameExist(true)
+                console.log("exist");
+                return
+            }
+            else{
+                setIsUsernameExist(false)
+                console.log("not");
+                isExist=false
+            }
+        })
+
+    }
+    
     
 
     /******************* 
@@ -62,9 +90,10 @@ export default function Login({setShowLogin, setShowHome}) {
         <div>
             <h3>Login Here</h3>
             <form style={{backgroundColor: 'pink'}} onSubmit={onLogin}>
-                <input type="text" id="usernameLg" placeholder="Your UserName" /> <br /><br />
+                <h2>{isUsernameExist ? 'This Username is already exist...please! enter another' : 'username should be unique'}</h2>
+                <input type="text" id="usernameLg" placeholder="Your UserName" onBlur={userExist}/><br /><br />
                 <input type="password" id="passwordLg" placeholder="Your Password" /><br /><br />
-                <input type="submit" value="Login" /> <br /><br />
+                <input type="submit" value="Login" disabled={isUsernameExist} /> <br /><br />
                 <h4 onClick={()=>{setShowLogin(false)}} >not Signup yet Click here</h4>
             </form>
         </div>
